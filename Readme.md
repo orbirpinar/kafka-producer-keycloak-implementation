@@ -38,7 +38,7 @@ password —> secret
 
 6-) After you clicked events you select 'custom-event-listener' in Even Listeners input and hit the save button.
 
-7-) When you registered a new user, New user's id published by Kafka.
+7-) When A new user registers an account, The new user's id is published by Kafka
 
 ![keycloak](/images/keycloak-event.png)
 
