@@ -18,15 +18,15 @@ So When users register in keycloak you can capture user information and produce 
 mvn clean install
 ```
 
-2- For  kafka, zookeeper and keycloak we user docker. To spin up all docker container You can just type below in your terminal
+2- For Kafka, zookeeper, and keycloak we use docker. To spin up all docker containers You can just type below in your terminal
 
 ```bash
 docker-compose up -d
 ```
 
-3-) Wait until all docker containers is ready then Your jar file will be deployed in keycloak server.
+3-) Wait until all docker containers are ready then Your jar file will be deployed in keycloak server.
 
-4-) Then you can login keycloak admin console in
+4-) Then you can log in keycloak admin console in
 
 [http://localhost:8084](http://localhost:8084)
 
@@ -34,11 +34,11 @@ username —> admin
 
 password —> secret
 
-5-) Then you click Events at left side bar.
+5-) Then you click Events on the left sidebar.
 
-6-) After you  clicked events you  select 'custom-event-listener' in Even Listeners input and hit save button.
+6-) After you clicked events you select 'custom-event-listener' in Even Listeners input and hit the save button.
 
-7-) When you register new user.Registered user's id publish by kafka.
+7-) When you registered a new user, New user's id published by Kafka.
 
 ![keycloak](/images/keycloak-event.png)
 
