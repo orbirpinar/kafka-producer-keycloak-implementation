@@ -1,8 +1,8 @@
-### **Why do we need Kafka?**
+### **Why we need Kafka?**
 
 We don't need Kafka specifically but we need a producer-consumer mechanism.
 
-### Why do we need a producer-consumer mechanism?
+### Why we need a producer-consumer mechanism?
 
 Keycloak stores user information in a relational database
 
