@@ -1,47 +1,123 @@
-### **Why we need Kafka?**
+# Keycloak Kafka Event Listener
 
-We don't need Kafka specifically but we need a producer-consumer mechanism.
+A Keycloak event listener that publishes user registration events to Apache Kafka for downstream processing in Spring Boot applications.
 
-### Why we need a producer-consumer mechanism?
+## Overview
 
-Keycloak stores user information in a relational database
+This project implements a producer-consumer pattern using Keycloak's EventListenerProvider interface and Apache Kafka to synchronize user data between Keycloak and your application database.
 
-Because When you use keycloak as an authentication system for your backend rest api, You need the registered user information to use in your own [database.](http://database.in/) In Keycloak You can implement the EventListenerProvider interface and listen to register events or a bunch of other events.
+### Why Use This Approach?
 
-So When users register in keycloak you can capture user information and produce it in Kafka Producer. Then consume this record in spring boot application and save it in your application database.
+When using Keycloak as an authentication system for your REST API, you often need access to registered user information in your own application database. This solution provides:
 
-### TO DO
+- **Real-time synchronization**: User data is immediately available in your application when users register
+- **Decoupled architecture**: Your application doesn't need direct database access to Keycloak
+- **Event-driven processing**: Handle user registration and other Keycloak events asynchronously
+- **Scalability**: Kafka enables reliable message processing across multiple consumers
 
-1-To create jar file you must build project once. For this just type below in your terminal. Of course you have to in project directory.
+### Architecture
+
+1. **Keycloak Event Listener**: Captures user registration events using EventListenerProvider interface
+2. **Kafka Producer**: Publishes user information to Kafka topics
+3. **Spring Boot Consumer**: Consumes messages and persists user data to application database
+
+## Prerequisites
+
+- Java 11 or higher
+- Maven 3.6+
+- Docker and Docker Compose
+
+## Setup Instructions
+
+### 1. Build the Project
+
+Navigate to the project directory and build the JAR file:
 
 ```bash
 mvn clean install
 ```
 
-2- For Kafka, zookeeper, and keycloak we use docker. To spin up all docker containers You can just type below in your terminal
+### 2. Start Docker Services
+
+Launch Kafka, Zookeeper, and Keycloak using Docker Compose:
 
 ```bash
 docker-compose up -d
 ```
 
-3-) Wait until all docker containers are ready then Your jar file will be deployed in keycloak server.
+Wait for all containers to be ready. The JAR file will be automatically deployed to the Keycloak server.
 
-4-) Then you can log in keycloak admin console in
+### 3. Configure Keycloak
 
-[http://localhost:8084](http://localhost:8084)
+1. Access the Keycloak Admin Console:
+   - URL: http://localhost:8084
+   - Username: `admin`
+   - Password: `secret`
 
-username —> admin
+2. Enable the custom event listener:
+   - Click **Events** in the left sidebar
+   - Select **Config** tab
+   - In the **Event Listeners** field, add `custom-event-listener`
+   - Click **Save**
 
-password —> secret
+### 4. Test the Integration
 
-5-) Then you click Events on the left sidebar.
+When a new user registers through Keycloak, their user ID and information will be automatically published to Kafka and can be consumed by your Spring Boot application.
 
-6-) After you clicked events you select 'custom-event-listener' in Even Listeners input and hit the save button.
+## Configuration
 
-7-) When A new user registers an account, The new user's id is published by Kafka
+### Kafka Topics
 
-![keycloak](/images/keycloak-event.png)
+The default topic configuration publishes user events to:
+- Topic: `keycloak-user-events`
+- Key: User ID
+- Value: User information (JSON format)
 
-For demo purpose I  just printed user id in consumer app but you can do whatever you need.
+### Event Types Supported
 
-To see consumer app you can visit [this](https://github.com/orbirpinar/spring-kafka-consumer-with-keycloak.git) repo
+- User registration
+- User profile updates
+- User deletion
+- Custom events (configurable)
+
+## Development
+
+### Customizing Event Handling
+
+To modify which events are captured or how data is structured, edit the EventListenerProvider implementation in:
+
+```
+src/main/java/your/package/CustomEventListenerProvider.java
+```
+
+### Kafka Configuration
+
+Kafka settings can be modified in the Docker Compose file or through environment variables.
+
+## Troubleshooting
+
+### Common Issues
+
+- **JAR not deploying**: Ensure Maven build completed successfully and Docker containers are fully started
+- **Events not firing**: Verify the event listener is properly configured in Keycloak Admin Console
+- **Kafka connection issues**: Check that all Docker services are running and accessible
+
+### Logs
+
+Monitor application logs through Docker:
+
+```bash
+docker-compose logs -f keycloak
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+[Add your license information here]
